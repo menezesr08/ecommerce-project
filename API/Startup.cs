@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Core.Interfaces;
 using Infrastructure.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -26,6 +27,15 @@ namespace API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            /* AddScoped method refers to the lifetime of the service we are injecting. 
+            In this case the service would be destroyed when the HTTP requests has finished.
+            The scoped lifetime works in this format:
+            - HTTP request comes in
+            - Controller gets hit and creates an instance of repo
+            - Repo gets data and sends it back to controller and then to client
+            - HTTP request is now finished and this service is destroyed.
+            */
+            services.AddScoped<IProductRepository, ProductRepository>();
             services.AddControllers();
             services.AddDbContext<StoreContext>(x => 
                 x.UseSqlite(_config.GetConnectionString("DefaultConnection")));
