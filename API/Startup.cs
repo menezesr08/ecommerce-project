@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using API.Helpers;
+using AutoMapper;
 using Core.Interfaces;
 using Infrastructure.Data;
 using Microsoft.AspNetCore.Builder;
@@ -36,6 +38,8 @@ namespace API
             - HTTP request is now finished and this service is destroyed.
             */
             services.AddScoped<IProductRepository, ProductRepository>();
+            services.AddScoped(typeof(IGenericRepository<>), (typeof(GenericRepository<>)));
+            services.AddAutoMapper(typeof(MappingProfiles));
             services.AddControllers();
             services.AddDbContext<StoreContext>(x => 
                 x.UseSqlite(_config.GetConnectionString("DefaultConnection")));
@@ -52,6 +56,8 @@ namespace API
             app.UseHttpsRedirection();
 
             app.UseRouting();
+            // The static images inside the wwwroot folder will be found by the API through this statement below.
+            app.UseStaticFiles();
 
             app.UseAuthorization();
 

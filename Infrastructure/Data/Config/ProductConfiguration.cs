@@ -19,8 +19,8 @@ namespace Infrastructure.Data.Config
             builder.Property(p => p.PictureUrl).IsRequired();
             // Here we associate a relationship between a product and product brand. 
             // A product brand can have many products
-            builder.HasOne(b => b.productBrand).WithMany().HasForeignKey(p => p.ProductBrandId);
-            builder.HasOne(t => t.productType).WithMany().HasForeignKey(p => p.ProductTypeId);
+            builder.HasOne(b => b.ProductBrand).WithMany().HasForeignKey(p => p.ProductBrandId);
+            builder.HasOne(t => t.ProductType).WithMany().HasForeignKey(p => p.ProductTypeId);
         }
     }
 }
