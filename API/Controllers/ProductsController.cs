@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using API.Dtos;
 using API.Errors;
+using API.Helpers;
 using AutoMapper;
 using Core.Entities;
 using Core.Interfaces;
@@ -33,14 +34,27 @@ namespace API.Controllers
         }
 
         // Action result is a HTTP response (like 200, 400 etc)
+        // int? means optional int
         [HttpGet]
-        public async Task<ActionResult<IReadOnlyList<ProductToReturnDto>>> GetProducts()
+        public async Task<ActionResult<Pagination<ProductToReturnDto>>> GetProducts([FromQuery]ProductSpecParams productParams)
         {
-            var spec = new ProductsWithTypesAndBrandsSpecification();
+            // This creates a spec that returns products with any including entities and applies paging
+            var spec = new ProductsWithTypesAndBrandsSpecification(productParams);
+            /* Does the same as above but returns the total count for the all the products with brand and type filters
+            // We create a seperate specification here as we want to return the count of all the items based on the given filters.
+            // If we used the previous spec which takes into account paging, then we would be returning the count of products for that page
+             and not the total products based on the filters */
+            var countSpec = new ProductWithFiltersForCountSpecification(productParams);
+
+            var totalItems = await _productsRepo.CountAsync(countSpec);
+
             var products = await _productsRepo.ListAsync(spec);
+
+            var data = _mapper.
+            Map<IReadOnlyList<Product>, IReadOnlyList<ProductToReturnDto>>(products);
             // we need to return Ok as we are returning an IReadOnlyList from repo
-            return Ok(_mapper.
-            Map<IReadOnlyList<Product>, IReadOnlyList<ProductToReturnDto>>(products));
+            return Ok(new Pagination<ProductToReturnDto>(productParams.PageIndex, 
+            productParams.PageSize, totalItems, data));
         }
 
         [HttpGet("{id}")]
