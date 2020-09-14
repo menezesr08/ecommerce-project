@@ -12,7 +12,8 @@ import { ShopParams } from '../shared/models/shopParams';
 })
 export class ShopComponent implements OnInit {
   // static is true since we know that the input property will appear always, not relying on any dynamic activity such as if statement
-  @ViewChild('search', {static: true}) searchTerm: ElementRef;
+  // we change from static from true to false because it now relies on NGIF for the loading indicator
+  @ViewChild('search', {static: false}) searchTerm: ElementRef;
   products: IProduct[];
   brands: IBrand[];
   types: IType[];
