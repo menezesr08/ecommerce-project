@@ -80,6 +80,7 @@ export class ShopComponent implements OnInit {
   }
 
   onPageChanged(event: any) {
+    // check if pagenumber is the same as before. Event here is just a pagenumber passed back from pager component
     if (this.shopParams.pageNumber !== event) {
       this.shopParams.pageNumber = event;
       this.getProducts();

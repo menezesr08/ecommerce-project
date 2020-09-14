@@ -20,6 +20,7 @@ namespace API.Extensions
             - HTTP request is now finished and this service is destroyed.
             */
             services.AddScoped<IProductRepository, ProductRepository>();
+            services.AddScoped<IBasketRepository, BasketRepository>();
             services.AddScoped(typeof(IGenericRepository<>), (typeof(GenericRepository<>)));
              // Make sure you add below service after services.AddControllers() otherwise it wont work
             services.Configure<ApiBehaviorOptions>(options =>
