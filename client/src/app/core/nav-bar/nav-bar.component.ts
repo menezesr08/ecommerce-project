@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { Observable } from 'rxjs';
+import { BasketService } from 'src/app/basket/basket.service';
+import { IBasket, IBasketItem } from 'src/app/shared/models/basket';
 
 @Component({
   selector: 'app-nav-bar',
@@ -6,10 +9,15 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./nav-bar.component.scss']
 })
 export class NavBarComponent implements OnInit {
+  basket$: Observable<IBasket>;
 
-  constructor() { }
+  constructor(private basketService: BasketService) { }
 
   ngOnInit(): void {
+    // this gets the current basket value which is an observable.
+    // If we want to access this in the template HTML, we need to use | async as this will let angular dispose of this observable
+    // when its finished.
+    this.basket$ = this.basketService.basket$;
   }
 
 }
